@@ -31,15 +31,20 @@ men = train_data.loc[train_data.Sex == 'male']['Survived']
 survival_rate_women = sum(women)/len(women)
 survival_rate_men = sum(men)/len(men)
 
-print(f'{survival_rate_women:.2%} of women survived')
-print(f'{survival_rate_men:.2%} of men survived')
+# print(f'{survival_rate_women:.2%} of women survived')
+# print(f'{survival_rate_men:.2%} of men survived')
+# print('-----------')
+
+# var = train_data.loc[train_data.Survived == 1]['Cabin']
+
+# print([cabin for cabin in var if str(cabin).lower() != 'nan'])
 
 # Use RandomForest to predict
 from sklearn.ensemble import RandomForestClassifier
 
 y = train_data['Survived']
 
-features = ['Pclass', 'Sex', 'SibSp', 'Parch']
+features = ['Pclass', 'Sex', 'SibSp', 'Parch', 'Age']
 X = pd.get_dummies(train_data[features])
 X_test = pd.get_dummies(test_data[features])
 
@@ -49,6 +54,10 @@ predictions = rf_model.predict(X_test)
 
 
 output = pd.DataFrame({'PassengerId': test_data.PassengerId, 'Survived': predictions})
-output.to_csv(
-    '/Users/pgutbrod/Development/private/projects/kaggle/competitions/titanic/submissions/my_submission.csv', index=False)
+from datetime import datetime
+dateTimeObj = datetime.now()
+timestampStr = dateTimeObj.strftime("%d-%b-%Y-%H-%M-%S")
+filepath = f'/Users/pgutbrod/Development/private/projects/kaggle/competitions/titanic/submissions/my_submission_{timestampStr}.csv'
 
+output.to_csv(filepath, index=False)
+print(f'File saved to {filepath}')
